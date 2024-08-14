@@ -1,7 +1,7 @@
 plugins {
     java
     kotlin("jvm") version "1.9.23"
-    id("fabric-loom") version "1.6-SNAPSHOT"
+    id("fabric-loom") version "1.7-SNAPSHOT"
 }
 
 val mod_version: String by project
