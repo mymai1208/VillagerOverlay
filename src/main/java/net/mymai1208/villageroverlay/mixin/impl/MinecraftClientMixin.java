@@ -12,6 +12,7 @@ import net.mymai1208.villageroverlay.VillagerOverlay;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
@@ -26,10 +27,15 @@ public abstract class MinecraftClientMixin {
     @Shadow @Nullable public ClientPlayerEntity player;
 
     @Shadow @Nullable public HitResult crosshairTarget;
-    private static final List<VillagerProfession> NO_JOBS = Arrays.asList(VillagerProfession.NONE, VillagerProfession.NITWIT);
+
+    @Unique
+    private static List<VillagerProfession> NO_JOBS = null;
 
     @Inject(method = "tick", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/network/ClientPlayerInteractionManager;tick()V"))
-    public void tick(CallbackInfo ci) {
+    public void villager_overlay$tick(CallbackInfo ci) {
+        if (NO_JOBS == null)
+            NO_JOBS = Arrays.asList(VillagerProfession.NONE, VillagerProfession.NITWIT);
+
         if(crosshairTarget != null) {
             if (crosshairTarget.getType() != HitResult.Type.ENTITY) {
                 return;
